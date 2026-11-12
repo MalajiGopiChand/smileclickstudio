@@ -19,6 +19,8 @@ The Vercel API lives in `api/studio.js`. It uses Supabase PostgreSQL for persist
 
 The local administrator account is not committed to GitHub. A Git push alone cannot migrate `.studio` or configure your cloud credentials. Until the SQL, migration, environment variables and redeployment are complete, the admin page shows an explicit cloud-setup error.
 
+For assisted initialization, `scripts/cloud-init.mjs` accepts a private JSON configuration through hidden standard input. It can apply the schema over a PostgreSQL connection with certificate and hostname validation, seed missing content, and transfer the local admin hashes. Supply the database CA certificate through `caPath`. It preserves existing cloud content and reports only nonsecret setup status. Never put connection credentials in command arguments or committed configuration files.
+
 ## Uploads and private media
 
 Large files upload directly to Supabase using short-lived, object-scoped upload URLs, avoiding Vercel's request-body limit. Photographs are limited to 10 MB; MP4 films to 200 MB. After uploading, the server checks the stored file size and signature before adding it to the library. All items start unpublished. Posters and replacements use the same signed-upload flow. Pending interrupted uploads are private and can be removed from the Supabase dashboard.
