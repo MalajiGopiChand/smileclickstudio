@@ -36,7 +36,8 @@ test('secure studio lifecycle, publication, persistence and authentication', asy
     await request('/api/admin/media/'+media.id+'/trash',{method:'POST'});assert.equal((await request('/api/admin/media/'+media.id,{method:'DELETE'})).r.status,200);
     assert.equal((await request('/api/admin/settings',{method:'PUT',body:{history:'Saved studio story',siteUrl:'https://studio.example'}})).r.status,200);
     assert.equal((await request('/api/content')).data.settings.history,'Saved studio story');
-    const sitemap=await fetch(base+'/sitemap.xml');assert.equal(sitemap.status,200);assert.match(await sitemap.text(),/https:\/\/studio.example\/films/);
+    const sitemap=await fetch(base+'/sitemap.xml');assert.equal(sitemap.status,200);const xml=await sitemap.text();assert.match(xml,/https:\/\/studio.example\/films/);assert.match(xml,/https:\/\/studio.example\/photographs/);assert.doesNotMatch(xml,/\/weddings/);
+    const oldGallery=await fetch(base+'/weddings?category=portraits',{redirect:'manual'});assert.equal(oldGallery.status,308);assert.equal(oldGallery.headers.get('location'),'/photographs?category=portraits');
     const unpublished=await request('/api/admin/collections',{method:'POST',body:{title:'Private collection',description:'Notes',published:false}});assert.equal(unpublished.r.status,201);assert.equal((await request('/api/content')).data.collections.length,0);
     assert.equal((await request('/api/logout',{method:'POST'})).r.status,200);assert.equal((await request('/api/admin/content')).r.status,401);
     for(let i=0;i<5;i++)assert.equal((await request('/api/login',{method:'POST',body:{email:'test@example.invalid',password:'wrong'}})).r.status,401);

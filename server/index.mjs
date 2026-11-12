@@ -110,9 +110,10 @@ export const server = http.createServer(async (req, res) => {
       fail(404,'Action not found.');
     }
     if (path.startsWith('/api/')) fail(404,'Endpoint not found.');
+    if (['/weddings','/weddings/','/gallery','/gallery/'].includes(path) && ['GET','HEAD'].includes(method)) { res.writeHead(308,{Location:'/photographs'+new URL(req.url,origin).search});res.end();return; }
     if (!['GET','HEAD'].includes(method)) fail(405,'Method not allowed.');
     if (path === '/robots.txt') {res.setHeader('Content-Type','text/plain');res.end(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/admin\n${load().settings.siteUrl ? `Sitemap: ${load().settings.siteUrl}/sitemap.xml\n` : ''}`);return;}
-    if (path === '/sitemap.xml') {const url=load().settings.siteUrl;if(!url)fail(503,'Set the canonical site URL in Website Settings to generate the sitemap.');res.setHeader('Content-Type','application/xml');res.end(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['/','/our-story','/weddings','/films','/services','/contact'].map(p=>`<url><loc>${url.replace(/\/$/,'').replace(/&/g,'&amp;').replace(/</g,'&lt;')}${p}</loc></url>`).join('')}</urlset>`);return;}
+    if (path === '/sitemap.xml') {const url=load().settings.siteUrl;if(!url)fail(503,'Set the canonical site URL in Website Settings to generate the sitemap.');res.setHeader('Content-Type','application/xml');res.end(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['/','/our-story','/photographs','/films','/services','/contact'].map(p=>`<url><loc>${url.replace(/\/$/,'').replace(/&/g,'&amp;').replace(/</g,'&lt;')}${p}</loc></url>`).join('')}</urlset>`);return;}
     if (/^\/(videos\/|images\/photo-)/.test(path)) fail(404,'Access media through the published library.');
     const dist=join(root,'dist');const file=resolve(dist,'.'+decodeURIComponent(path));if(!file.startsWith(dist+'/')&&!file.startsWith(dist+'\\')&&file!==dist)fail(403,'Access denied.');const target=existsSync(file)&&statSync(file).isFile()?file:join(dist,'index.html');stream(req,res,target);return;
   } catch(error) { if (!res.headersSent) send(error.status || 500,{error:error.status ? error.message : 'The server could not complete the request.'}); else res.end(); if (!error.status) console.error(error.message); }

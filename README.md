@@ -28,7 +28,8 @@ The first server start initializes the administrator account in SQLite. After th
 ## Public experience
 
 - `/`: editorial homepage, adaptive header, featured collection, philosophy, services, films and booking links.
-- `/our-story`, `/weddings`, `/films`, `/services`, `/contact` are direct-loadable routes.
+- `/our-story`, `/photographs`, `/films`, `/services`, `/contact` are direct-loadable routes.
+- `/photographs` shows all published photos by default, with category filters. Old `/weddings` and `/gallery` links redirect to it.
 - Responsive mobile menu with focus trapping and Escape, mobile action bar, keyboard lightbox, touch swipe, gallery filters, reduced-motion support.
 - Service enquiries select the relevant contact-form service automatically.
 - Contact fields use browser validation and open a URL-encoded WhatsApp draft. Visitors must review and send it. No enquiry is automatically sent or stored.
@@ -55,7 +56,7 @@ Do **not** deploy original wedding photos/videos in a public static folder if yo
 1. **Upload**: choose Photos (JPEG/PNG/WebP, 10 MB each) or Films (MP4, 200 MB each), select multiple files, review image previews, upload with progress. Uploads start private.
 2. **Gallery / Films**: fill title, description, alt text, category and order. Choose Featured and/or Published, then Save. Empty required metadata prevents publishing. Add matching film poster files and set orientation in Films. Photograph replacement is available in Gallery.
 3. **Categories**: add, rename or remove categories. Rename updates media assignments. Removal is blocked while items still use the category.
-4. **Collections**: create and edit editorial event titles/descriptions and publication status. Collections currently render as editorial text on Weddings; associating specific media with a collection and collection detail routes are not implemented.
+4. **Collections**: create and edit editorial event titles/descriptions and publication status. Collections currently render as editorial text on Photographs; associating specific media with a collection and collection detail routes are not implemented.
 5. **Studio Content**: edit homepage introduction, biography/photographer information, history and team. No invented biographies are supplied.
 6. **Contact Settings / Website Settings**: phone/WhatsApp, Instagram, Facebook, and canonical HTTPS site URL. Set the site URL for generated canonical links and sitemap.
 7. **Trash**: restore as unpublished, or permanently delete after confirmation. Stored copies are removed on permanent deletion; original project files remain intact.
